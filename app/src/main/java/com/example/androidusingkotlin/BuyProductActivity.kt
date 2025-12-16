@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.androidusingkotlin.database.DBHelper
 
 class BuyProductActivity : AppCompatActivity() {
     lateinit var tvProductName: TextView
@@ -35,6 +36,8 @@ class BuyProductActivity : AppCompatActivity() {
     lateinit var notificationBuilder: Notification.Builder
     var channelId: String = "infy.notification"
     var description: String = "Order Notification"
+
+    val dbHelper = DBHelper(this)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +113,21 @@ class BuyProductActivity : AppCompatActivity() {
                         .setSmallIcon(R.drawable.ic_launcher_background)
                         .setContentIntent(pendingIntent)
                     notificationManager.notify(123, notificationBuilder.build())
+
+
+                    //insert that item in the database [this is just for learning purpose, nothing to do anything with logic]
+                    val success = dbHelper.insertProduct(
+                        product.productName,
+                        Integer.parseInt(edtProductQty.text.toString()),
+                        product.productPrice
+                    )
+
+                    if (success) {
+                        Toast.makeText(this, "Product added", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Insert failed", Toast.LENGTH_SHORT).show()
+                    }
+
 
                     dialog.dismiss()
 
